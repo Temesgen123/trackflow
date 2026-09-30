@@ -14,9 +14,9 @@
     "db:seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
-    "next": "15.0.3",
-    "react": "19.0.0",
-    "react-dom": "19.0.0",
+    "next": "15.0.5",
+    "react": "19.0.1",
+    "react-dom": "19.0.1",
     "@prisma/client": "5.22.0",
     "next-auth": "5.0.0-beta.29",
     "bcryptjs": "2.4.3",
@@ -49,13 +49,13 @@
     "postcss": "8.4.47",
     "autoprefixer": "10.4.20",
     "eslint": "8.57.1",
-    "eslint-config-next": "15.0.3"
+    "eslint-config-next": "15.0.5"
   },
   "overrides": {
-    "react": "19.0.0",
-    "react-dom": "19.0.0",
+    "react": "19.0.1",
+    "react-dom": "19.0.1",
     "next-auth": {
-      "next": "15.0.3"
+      "next": "15.0.5"
     }
   }
 }

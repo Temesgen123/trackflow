@@ -115,7 +115,7 @@ export function PhaseList({ phases, projectId }: PhaseListProps) {
           onClick={() => setShowForm(true)}
           className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors py-2"
         >
-          <Plus className="h-4 w-4" /> Add phase to the project
+          <Plus className="h-4 w-4" /> Add phase
         </button>
       )}
     </div>
