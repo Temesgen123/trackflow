@@ -1,7 +1,8 @@
 // components/phases/phase-list.tsx
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState } from 'react';
+import { useToast } from '@/components/ui/toast';
 import { PhaseStatusSelect } from './phase-status-select';
 import { PhaseForm } from './phase-form';
 import { ProgressBar } from '@/components/ui/progress-bar';
@@ -10,6 +11,7 @@ import type { PhaseWithMilestones } from '@/types';
 import { calcMilestoneProgress } from '@/lib/utils/progress';
 import { ChevronDown, ChevronRight, Plus, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useTransition } from 'react';
 import { cn } from '@/lib/utils';
 
 interface PhaseListProps {
@@ -23,6 +25,7 @@ export function PhaseList({ phases, projectId }: PhaseListProps) {
     Object.fromEntries(phases.map((p) => [p.id, true])),
   );
   const router = useRouter();
+  const { success, error: toastError } = useToast();
   const [, startTransition] = useTransition();
 
   function toggle(id: string) {
@@ -32,6 +35,7 @@ export function PhaseList({ phases, projectId }: PhaseListProps) {
   async function deletePhase(id: string) {
     if (!confirm('Delete this phase and all its milestones and tasks?')) return;
     await fetch(`/api/phases/${id}`, { method: 'DELETE' });
+    success('Phase deleted');
     startTransition(() => router.refresh());
   }
 

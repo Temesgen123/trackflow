@@ -67,6 +67,7 @@ model User {
   assignedTasks Task[]    @relation("TaskAssignee")
   accounts      Account[]
   sessions      Session[]
+  reminders     Reminder[]
 
   @@map("users")
 }
@@ -189,4 +190,24 @@ model Sprint {
   tasks   Task[]
 
   @@map("sprints")
+}
+
+// ─── Reminder / Todo ─────────────────────────────────────────
+
+enum ReminderStatus {
+  PENDING
+  DONE
+}
+
+model Reminder {
+  id        String         @id @default(uuid())
+  userId    String         @map("user_id")
+  text      String
+  status    ReminderStatus @default(PENDING)
+  createdAt DateTime       @default(now()) @map("created_at")
+  updatedAt DateTime       @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("reminders")
 }

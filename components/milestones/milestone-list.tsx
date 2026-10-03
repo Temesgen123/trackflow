@@ -2,6 +2,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useToast } from "@/components/ui/toast";
 import { useRouter } from "next/navigation";
 import type { MilestoneWithTasks } from "@/types";
 import { MilestoneStatusSelect } from "./milestone-status-select";
@@ -24,6 +25,7 @@ export function MilestoneList({ milestones, phaseId }: MilestoneListProps) {
     Object.fromEntries(milestones.map((m) => [m.id, false]))
   );
   const router = useRouter();
+  const { success, error: toastError } = useToast();
   const [, startTransition] = useTransition();
 
   function toggle(id: string) {
@@ -33,6 +35,7 @@ export function MilestoneList({ milestones, phaseId }: MilestoneListProps) {
   async function deleteMilestone(id: string) {
     if (!confirm("Delete this milestone and its tasks?")) return;
     await fetch(`/api/milestones/${id}`, { method: "DELETE" });
+    success("Milestone deleted");
     startTransition(() => router.refresh());
   }
 

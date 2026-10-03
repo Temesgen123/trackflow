@@ -2,6 +2,7 @@
 
 import type { Metadata } from "next";
 import "./globals.css";
+import { ToastProvider } from "@/components/ui/toast";
 
 export const metadata: Metadata = {
   title: { default: "TrackFlow", template: "%s | TrackFlow" },
@@ -9,11 +10,7 @@ export const metadata: Metadata = {
   icons: { icon: "/favicon.ico" },
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -24,7 +21,9 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body>{children}</body>
+      <body>
+        <ToastProvider>{children}</ToastProvider>
+      </body>
     </html>
   );
 }

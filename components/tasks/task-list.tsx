@@ -2,11 +2,13 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useToast } from "@/components/ui/toast";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import type { TaskWithAssignee, TaskStatus } from "@/types";
-import { STATUS_LABELS, PRIORITY_COLORS, PRIORITY_LABELS } from "@/types";
+import { STATUS_LABELS, STATUS_COLORS, PRIORITY_COLORS, PRIORITY_LABELS } from "@/types";
 import { TaskForm } from "./task-form";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, ExternalLink } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 
@@ -28,6 +30,7 @@ interface TaskListProps {
 export function TaskList({ tasks, milestoneId }: TaskListProps) {
   const [showForm, setShowForm] = useState(false);
   const router = useRouter();
+  const { success } = useToast();
   const [, startTransition] = useTransition();
 
   async function updateStatus(taskId: string, status: TaskStatus) {
@@ -42,6 +45,7 @@ export function TaskList({ tasks, milestoneId }: TaskListProps) {
   async function deleteTask(taskId: string) {
     if (!confirm("Delete this task?")) return;
     await fetch(`/api/tasks/${taskId}`, { method: "DELETE" });
+    success("Task deleted");
     startTransition(() => router.refresh());
   }
 
@@ -51,11 +55,11 @@ export function TaskList({ tasks, milestoneId }: TaskListProps) {
         <div
           key={task.id}
           className={cn(
-            "flex items-start gap-3 rounded-lg border bg-card px-3 py-2.5 text-sm transition-opacity",
+            "flex items-start gap-3 rounded-lg border bg-card px-3 py-2.5 text-sm transition-opacity group",
             task.status === "DONE" && "opacity-60"
           )}
         >
-          {/* Status checkbox-style dot */}
+          {/* Done toggle */}
           <button
             onClick={() => updateStatus(task.id, task.status === "DONE" ? "TODO" : "DONE")}
             className={cn(
@@ -75,33 +79,47 @@ export function TaskList({ tasks, milestoneId }: TaskListProps) {
 
           {/* Task content */}
           <div className="flex-1 min-w-0">
-            <p className={cn("font-medium", task.status === "DONE" && "line-through text-muted-foreground")}>
-              {task.title}
-            </p>
+            <div className="flex items-center gap-1.5">
+              <Link
+                href={`/tasks/${task.id}`}
+                className={cn(
+                  "font-medium hover:text-primary hover:underline transition-colors truncate",
+                  task.status === "DONE" && "line-through text-muted-foreground"
+                )}
+              >
+                {task.title}
+              </Link>
+              <Link
+                href={`/tasks/${task.id}`}
+                className="opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-primary shrink-0"
+                title="Open detail"
+              >
+                <ExternalLink className="h-3 w-3" />
+              </Link>
+            </div>
             <div className="mt-1 flex flex-wrap items-center gap-2">
-              {/* Status select */}
               <select
                 value={task.status}
                 onChange={(e) => updateStatus(task.id, e.target.value as TaskStatus)}
-                className={cn("rounded-full border px-2 py-0.5 text-xs font-medium cursor-pointer outline-none", STATUS_COLOR[task.status])}
+                className={cn(
+                  "rounded-full border px-2 py-0.5 text-xs font-medium cursor-pointer outline-none",
+                  STATUS_COLOR[task.status]
+                )}
               >
                 {STATUSES.map((s) => <option key={s} value={s}>{STATUS_LABELS[s]}</option>)}
               </select>
 
-              {/* Priority */}
               <span className={cn("text-xs font-medium flex items-center gap-1", PRIORITY_COLORS[task.priority])}>
                 <span className="h-1.5 w-1.5 rounded-full bg-current inline-block"/>
                 {PRIORITY_LABELS[task.priority]}
               </span>
 
-              {/* Due date */}
               {task.dueDate && (
                 <span className="text-xs text-muted-foreground">
                   Due {format(new Date(task.dueDate), "MMM d")}
                 </span>
               )}
 
-              {/* Assignee */}
               {task.assignee && (
                 <span className="text-xs text-muted-foreground flex items-center gap-1">
                   <span className="h-4 w-4 rounded-full bg-primary/20 text-primary text-[9px] font-bold flex items-center justify-center">
@@ -116,7 +134,7 @@ export function TaskList({ tasks, milestoneId }: TaskListProps) {
           {/* Delete */}
           <button
             onClick={() => deleteTask(task.id)}
-            className="text-muted-foreground hover:text-destructive transition-colors mt-0.5 shrink-0"
+            className="text-muted-foreground hover:text-destructive transition-colors mt-0.5 shrink-0 opacity-0 group-hover:opacity-100"
             title="Delete task"
           >
             <Trash2 className="h-3 w-3" />
@@ -124,7 +142,6 @@ export function TaskList({ tasks, milestoneId }: TaskListProps) {
         </div>
       ))}
 
-      {/* Add task form */}
       {showForm ? (
         <div className="rounded-lg border bg-card p-3 mt-1">
           <TaskForm

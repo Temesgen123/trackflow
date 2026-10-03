@@ -1,4 +1,4 @@
-// app/projects/[id]/page.tsx — Project detail with full phase/milestone/task management
+// app/projects/[id]/page.tsx — Project detail
 // Next.js 15: params is a Promise
 
 import { auth } from "@/lib/auth";
@@ -10,7 +10,7 @@ import { StatusBadge } from "@/components/ui/status-badge";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { PhaseList } from "@/components/phases/phase-list";
 import Link from "next/link";
-import { ChevronRight, Calendar } from "lucide-react";
+import { ChevronRight, Calendar, Layers, Timer, Pencil } from "lucide-react";
 import { format } from "date-fns";
 
 type Props = { params: Promise<{ id: string }> };
@@ -32,17 +32,14 @@ export default async function ProjectDetailPage({ params }: Props) {
   if (!project) notFound();
 
   const overallProgress = calcProjectProgress(project.phases);
-  const totalTasks = project.phases
-    .flatMap((p) => p.milestones)
-    .flatMap((m) => m.tasks).length;
-  const doneTasks = project.phases
-    .flatMap((p) => p.milestones)
-    .flatMap((m) => m.tasks)
-    .filter((t) => t.status === "DONE").length;
+  const totalTasks = project.phases.flatMap((p) => p.milestones).flatMap((m) => m.tasks).length;
+  const doneTasks  = project.phases.flatMap((p) => p.milestones).flatMap((m) => m.tasks).filter((t) => t.status === "DONE").length;
+  const activeSprint = project.sprints.find((s) => s.status === "ACTIVE");
 
   return (
     <AppShell>
       <div className="p-8 max-w-4xl mx-auto">
+
         {/* Breadcrumb */}
         <div className="mb-2 flex items-center gap-2 text-sm text-muted-foreground">
           <Link href="/projects" className="hover:text-foreground transition-colors">Projects</Link>
@@ -69,9 +66,40 @@ export default async function ProjectDetailPage({ params }: Props) {
               </div>
             )}
           </div>
+          {/* Edit button */}
+          <Link
+            href={`/projects/${id}/edit`}
+            className="inline-flex items-center gap-2 rounded-md border bg-card px-3 py-2 text-sm font-medium hover:bg-muted transition-colors shadow-sm shrink-0"
+          >
+            <Pencil className="h-4 w-4" />
+            Edit
+          </Link>
         </div>
 
-        {/* Stats row */}
+        {/* Quick-action links */}
+        <div className="mb-6 flex gap-3 flex-wrap">
+          <Link
+            href={`/projects/${id}/sprints`}
+            className="inline-flex items-center gap-2 rounded-md border bg-card px-3 py-2 text-sm font-medium hover:bg-muted transition-colors shadow-sm"
+          >
+            <Timer className="h-4 w-4 text-primary" />
+            Sprints
+            {activeSprint && (
+              <span className="ml-1 rounded-full bg-blue-100 text-blue-700 text-xs px-1.5 py-0.5 font-semibold">
+                1 active
+              </span>
+            )}
+          </Link>
+          <Link
+            href="/board"
+            className="inline-flex items-center gap-2 rounded-md border bg-card px-3 py-2 text-sm font-medium hover:bg-muted transition-colors shadow-sm"
+          >
+            <Layers className="h-4 w-4 text-primary" />
+            Sprint board
+          </Link>
+        </div>
+
+        {/* Stats */}
         <div className="mb-6 grid grid-cols-3 gap-3">
           <div className="rounded-xl border bg-card p-4 shadow-sm">
             <p className="text-2xl font-bold">{project.phases.length}</p>
@@ -89,19 +117,16 @@ export default async function ProjectDetailPage({ params }: Props) {
           </div>
         </div>
 
-        {/* Overall progress bar */}
+        {/* Progress bar */}
         <div className="mb-8 rounded-xl border bg-card p-4 shadow-sm">
           <ProgressBar label="Overall progress" value={overallProgress} />
         </div>
 
-        {/* Phase list (interactive) */}
+        {/* Phases */}
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-base font-semibold">Phases</h2>
-          <span className="text-xs text-muted-foreground">
-            Click a phase to expand milestones and tasks
-          </span>
+          <span className="text-xs text-muted-foreground">Click a phase to expand</span>
         </div>
-
         <PhaseList phases={project.phases as any} projectId={project.id} />
       </div>
     </AppShell>

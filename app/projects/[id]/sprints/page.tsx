@@ -1,30 +1,27 @@
 // app/projects/[id]/sprints/page.tsx — Sprint management page
 // Next.js 15: params is a Promise
 
-import { auth } from '@/lib/auth';
-import { redirect, notFound } from 'next/navigation';
-import { AppShell } from '@/components/layout/app-shell';
-import { db } from '@/lib/db';
-import { SprintCard } from '@/components/sprints/sprint-card';
-import { CreateSprintButton } from '@/components/sprints/create-sprint-button';
-import Link from 'next/link';
-import { ChevronRight } from 'lucide-react';
+import { auth } from "@/lib/auth";
+import { redirect, notFound } from "next/navigation";
+import { AppShell } from "@/components/layout/app-shell";
+import { db } from "@/lib/db";
+import { SprintCard } from "@/components/sprints/sprint-card";
+import { CreateSprintButton } from "@/components/sprints/create-sprint-button";
+import Link from "next/link";
+import { ChevronRight } from "lucide-react";
 
 type Props = { params: Promise<{ id: string }> };
 
 export async function generateMetadata({ params }: Props) {
   const { id } = await params;
-  const project = await db.project.findUnique({
-    where: { id },
-    select: { name: true },
-  });
-  return { title: project ? `Sprints — ${project.name}` : 'Sprints' };
+  const project = await db.project.findUnique({ where: { id }, select: { name: true } });
+  return { title: project ? `Sprints — ${project.name}` : "Sprints" };
 }
 
 export default async function SprintsPage({ params }: Props) {
   const { id: projectId } = await params;
   const session = await auth();
-  if (!session?.user?.id) redirect('/login');
+  if (!session?.user?.id) redirect("/login");
 
   const project = await db.project.findFirst({
     where: { id: projectId, ownerId: session.user.id },
@@ -35,30 +32,23 @@ export default async function SprintsPage({ params }: Props) {
   const sprints = await db.sprint.findMany({
     where: { projectId },
     include: { _count: { select: { tasks: true } } },
-    orderBy: { startDate: 'desc' },
+    orderBy: { startDate: "desc" },
   });
 
-  const hasActiveSprint = sprints.some((s) => s.status === 'ACTIVE');
-  const activeSprint = sprints.find((s) => s.status === 'ACTIVE');
-  const plannedSprints = sprints.filter((s) => s.status === 'PLANNED');
-  const completedSprints = sprints.filter((s) => s.status === 'COMPLETED');
+  const hasActiveSprint = sprints.some((s) => s.status === "ACTIVE");
+  const activeSprint    = sprints.find((s) => s.status === "ACTIVE");
+  const plannedSprints  = sprints.filter((s) => s.status === "PLANNED");
+  const completedSprints= sprints.filter((s) => s.status === "COMPLETED");
 
   return (
     <AppShell>
       <div className="p-8 max-w-3xl mx-auto">
+
         {/* Breadcrumb */}
         <div className="mb-2 flex items-center gap-2 text-sm text-muted-foreground">
-          <Link
-            href="/projects"
-            className="hover:text-foreground transition-colors"
-          >
-            Projects
-          </Link>
+          <Link href="/projects" className="hover:text-foreground transition-colors">Projects</Link>
           <ChevronRight className="h-4 w-4" />
-          <Link
-            href={`/projects/${projectId}`}
-            className="hover:text-foreground transition-colors"
-          >
+          <Link href={`/projects/${projectId}`} className="hover:text-foreground transition-colors">
             {project.name}
           </Link>
           <ChevronRight className="h-4 w-4" />
@@ -70,8 +60,7 @@ export default async function SprintsPage({ params }: Props) {
           <div>
             <h1 className="text-2xl font-bold tracking-tight">Sprints</h1>
             <p className="text-sm text-muted-foreground mt-1">
-              Manage 2-week sprints for{' '}
-              <span className="font-medium">{project.name}</span>
+              Manage 2-week sprints for <span className="font-medium">{project.name}</span>
             </p>
           </div>
           <CreateSprintButton projectId={projectId} />
@@ -80,9 +69,7 @@ export default async function SprintsPage({ params }: Props) {
         {/* Summary bar */}
         <div className="mb-6 grid grid-cols-3 gap-3">
           <div className="rounded-xl border bg-card p-4 shadow-sm text-center">
-            <p className="text-2xl font-bold text-blue-600">
-              {activeSprint ? 1 : 0}
-            </p>
+            <p className="text-2xl font-bold text-blue-600">{activeSprint ? 1 : 0}</p>
             <p className="text-xs text-muted-foreground mt-0.5">Active</p>
           </div>
           <div className="rounded-xl border bg-card p-4 shadow-sm text-center">
@@ -90,9 +77,7 @@ export default async function SprintsPage({ params }: Props) {
             <p className="text-xs text-muted-foreground mt-0.5">Planned</p>
           </div>
           <div className="rounded-xl border bg-card p-4 shadow-sm text-center">
-            <p className="text-2xl font-bold text-green-600">
-              {completedSprints.length}
-            </p>
+            <p className="text-2xl font-bold text-green-600">{completedSprints.length}</p>
             <p className="text-xs text-muted-foreground mt-0.5">Completed</p>
           </div>
         </div>

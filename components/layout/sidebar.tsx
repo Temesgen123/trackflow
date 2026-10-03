@@ -1,5 +1,4 @@
 // components/layout/sidebar.tsx
-
 "use client";
 
 import Link from "next/link";
@@ -10,6 +9,7 @@ import {
   FolderKanban,
   Kanban,
   Flag,
+  ListTodo,
   BarChart2,
   Settings,
   LogOut,
@@ -17,15 +17,16 @@ import {
 import { signOut } from "next-auth/react";
 
 const NAV = [
-  { label: "Dashboard",    href: "/dashboard",  icon: LayoutDashboard },
-  { label: "Projects",     href: "/projects",   icon: FolderKanban },
-  { label: "Sprint Board", href: "/board",      icon: Kanban },
-  { label: "Milestones",   href: "/milestones", icon: Flag },
+  { label: "Dashboard",    href: "/dashboard", icon: LayoutDashboard },
+  { label: "Projects",     href: "/projects",  icon: FolderKanban    },
+  { label: "Sprint Board", href: "/board",     icon: Kanban          },
+  { label: "Backlog",      href: "/backlog",   icon: ListTodo        },
+  { label: "Milestones",   href: "/milestones",icon: Flag            },
 ];
 
 const BOTTOM_NAV = [
   { label: "Reports",  href: "/reports",  icon: BarChart2 },
-  { label: "Settings", href: "/settings", icon: Settings },
+  { label: "Settings", href: "/settings", icon: Settings  },
 ];
 
 export function Sidebar() {
@@ -33,7 +34,6 @@ export function Sidebar() {
 
   return (
     <aside className="flex h-screen w-56 flex-col bg-slate-900 px-3 py-5 text-slate-300 shrink-0">
-      {/* Brand */}
       <div className="mb-6 flex items-center gap-2.5 px-2 pb-5 border-b border-slate-800">
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-sm font-bold text-white">
           TF
@@ -41,7 +41,6 @@ export function Sidebar() {
         <span className="text-sm font-semibold text-white">TrackFlow</span>
       </div>
 
-      {/* Main nav */}
       <p className="mb-1 px-2 text-[10px] font-semibold uppercase tracking-widest text-slate-600">
         Workspace
       </p>

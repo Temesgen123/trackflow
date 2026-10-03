@@ -3,7 +3,7 @@
 
 import { useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import type { Sprint, SprintStatus } from '@/types';
+import type { Sprint, SprintStatus } from '@prisma/client';
 import { format } from 'date-fns';
 import { Play, CheckCircle2, Trash2, Calendar } from 'lucide-react';
 import { cn } from '@/lib/utils';

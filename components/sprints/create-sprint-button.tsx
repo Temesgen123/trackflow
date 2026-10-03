@@ -1,9 +1,9 @@
 // components/sprints/create-sprint-button.tsx
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Plus, X } from 'lucide-react';
-import { SprintForm } from './sprint-form';
+import { useState } from "react";
+import { Plus, X } from "lucide-react";
+import { SprintForm } from "./sprint-form";
 
 export function CreateSprintButton({ projectId }: { projectId: string }) {
   const [open, setOpen] = useState(false);
@@ -14,10 +14,7 @@ export function CreateSprintButton({ projectId }: { projectId: string }) {
         <div className="w-full max-w-md rounded-xl border bg-card p-6 shadow-xl">
           <div className="flex items-center justify-between mb-5">
             <h2 className="text-base font-semibold">New sprint</h2>
-            <button
-              onClick={() => setOpen(false)}
-              className="text-muted-foreground hover:text-foreground"
-            >
+            <button onClick={() => setOpen(false)} className="text-muted-foreground hover:text-foreground">
               <X className="h-4 w-4" />
             </button>
           </div>
