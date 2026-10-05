@@ -107,7 +107,7 @@ export default async function ReportsPage() {
 
   return (
     <AppShell>
-      <div className="p-8 max-w-5xl mx-auto">
+      <div className="p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto">
 
         {/* Header */}
         <div className="mb-8">
@@ -118,7 +118,7 @@ export default async function ReportsPage() {
         </div>
 
         {/* Top stat cards */}
-        <div className="mb-6 grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div className="mb-6 grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
           <StatCard
             label="Active projects"
             value={activeProjects}
@@ -146,7 +146,7 @@ export default async function ReportsPage() {
         </div>
 
         {/* Donuts row */}
-        <div className="mb-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="mb-6 grid grid-cols-1 gap-4">
           <DonutChart title="Task status breakdown" segments={taskStatusSegments} />
           <DonutChart title="Task priority breakdown" segments={prioritySegments} />
         </div>

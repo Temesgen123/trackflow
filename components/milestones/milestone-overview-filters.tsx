@@ -1,32 +1,32 @@
-// components/milestones/milestone-overview-filters.tsx
+// components/milestones/milestone-overview-filters.tsx — Responsive
 "use client";
 
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useTransition } from "react";
 
 const STATUS_OPTIONS = [
-  { value: "",           label: "All statuses"  },
-  { value: "TODO",       label: "To do"         },
-  { value: "IN_PROGRESS",label: "In progress"   },
-  { value: "IN_REVIEW",  label: "In review"     },
-  { value: "DONE",       label: "Done"          },
-  { value: "BLOCKED",    label: "Blocked"       },
+  { value: "",            label: "All statuses" },
+  { value: "TODO",        label: "To do"        },
+  { value: "IN_PROGRESS", label: "In progress"  },
+  { value: "IN_REVIEW",   label: "In review"    },
+  { value: "DONE",        label: "Done"         },
+  { value: "BLOCKED",     label: "Blocked"      },
 ];
 
 const DUE_OPTIONS = [
-  { value: "",           label: "Any due date"  },
-  { value: "overdue",    label: "Overdue"       },
-  { value: "this-week",  label: "Due this week" },
-  { value: "this-month", label: "Due this month"},
+  { value: "",            label: "Any due date"   },
+  { value: "overdue",     label: "Overdue"        },
+  { value: "this-week",   label: "Due this week"  },
+  { value: "this-month",  label: "Due this month" },
 ];
 
 interface Project { id: string; name: string; }
 
 export function MilestoneOverviewFilters({ projects }: { projects: Project[] }) {
-  const router      = useRouter();
-  const pathname    = usePathname();
-  const searchParams= useSearchParams();
-  const [, start]   = useTransition();
+  const router       = useRouter();
+  const pathname     = usePathname();
+  const searchParams = useSearchParams();
+  const [, start]    = useTransition();
 
   function update(key: string, value: string) {
     const params = new URLSearchParams(searchParams.toString());
@@ -35,39 +35,28 @@ export function MilestoneOverviewFilters({ projects }: { projects: Project[] }) 
   }
 
   return (
-    <div className="flex flex-wrap gap-3">
-      {/* Project filter */}
+    <div className="flex flex-wrap gap-2 sm:gap-3">
       <select
         value={searchParams.get("project") ?? ""}
         onChange={(e) => update("project", e.target.value)}
-        className="rounded-md border bg-background px-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-ring"
+        className="flex-1 min-w-32 rounded-md border bg-background px-2 sm:px-3 py-1.5 text-xs sm:text-sm outline-none focus:ring-2 focus:ring-ring"
       >
         <option value="">All projects</option>
-        {projects.map((p) => (
-          <option key={p.id} value={p.id}>{p.name}</option>
-        ))}
+        {projects.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
       </select>
-
-      {/* Status filter */}
       <select
         value={searchParams.get("status") ?? ""}
         onChange={(e) => update("status", e.target.value)}
-        className="rounded-md border bg-background px-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-ring"
+        className="flex-1 min-w-28 rounded-md border bg-background px-2 sm:px-3 py-1.5 text-xs sm:text-sm outline-none focus:ring-2 focus:ring-ring"
       >
-        {STATUS_OPTIONS.map((o) => (
-          <option key={o.value} value={o.value}>{o.label}</option>
-        ))}
+        {STATUS_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
       </select>
-
-      {/* Due date filter */}
       <select
         value={searchParams.get("due") ?? ""}
         onChange={(e) => update("due", e.target.value)}
-        className="rounded-md border bg-background px-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-ring"
+        className="flex-1 min-w-28 rounded-md border bg-background px-2 sm:px-3 py-1.5 text-xs sm:text-sm outline-none focus:ring-2 focus:ring-ring"
       >
-        {DUE_OPTIONS.map((o) => (
-          <option key={o.value} value={o.value}>{o.label}</option>
-        ))}
+        {DUE_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
       </select>
     </div>
   );

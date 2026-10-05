@@ -68,7 +68,7 @@ export default async function TaskDetailPage({ params }: Props) {
 
   return (
     <AppShell>
-      <div className="p-8 max-w-3xl mx-auto">
+      <div className="p-4 sm:p-6 lg:p-8 max-w-3xl mx-auto">
 
         {/* Breadcrumb */}
         <div className="mb-4 flex items-center gap-1.5 text-sm text-muted-foreground flex-wrap">

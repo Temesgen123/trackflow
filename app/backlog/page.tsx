@@ -78,7 +78,7 @@ export default async function BacklogPage({
 
   return (
     <AppShell>
-      <div className="p-8 max-w-5xl mx-auto">
+      <div className="p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto">
 
         {/* Header */}
         <div className="mb-6">
@@ -89,7 +89,7 @@ export default async function BacklogPage({
         </div>
 
         {/* Stats */}
-        <div className="mb-6 grid grid-cols-3 gap-3">
+        <div className="mb-6 grid grid-cols-3 gap-2 sm:gap-3">
           <div className="rounded-xl border bg-card p-4 shadow-sm">
             <p className="text-2xl font-bold">{tasks.length}</p>
             <p className="text-xs text-muted-foreground mt-0.5">Total tasks</p>

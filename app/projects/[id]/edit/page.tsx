@@ -33,7 +33,7 @@ export default async function EditProjectPage({ params }: Props) {
 
   return (
     <AppShell>
-      <div className="p-8 max-w-2xl mx-auto">
+      <div className="p-4 sm:p-6 lg:p-8 max-w-2xl mx-auto">
 
         {/* Breadcrumb */}
         <div className="mb-2 flex items-center gap-2 text-sm text-muted-foreground">

@@ -1,4 +1,4 @@
-// components/tasks/task-detail-panel.tsx
+// components/tasks/task-detail-panel.tsx — Responsive
 "use client";
 
 import { useState, useTransition } from "react";
@@ -30,7 +30,7 @@ interface Task {
 export function TaskDetailPanel({ task, users, sprints }: { task: Task; users: UserRow[]; sprints: SprintRow[] }) {
   const router = useRouter();
   const { success, error: toastError } = useToast();
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
   const [editing,  setEditing]  = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [title,       setTitle]       = useState(task.title);
@@ -79,42 +79,43 @@ export function TaskDetailPanel({ task, users, sprints }: { task: Task; users: U
   return (
     <div className="space-y-4">
       <div className="rounded-xl border bg-card shadow-sm overflow-hidden">
+
         {/* Title + actions */}
-        <div className="flex items-start gap-3 p-6 border-b">
+        <div className="flex items-start gap-3 p-4 sm:p-6 border-b">
           <div className="flex-1 min-w-0">
             {editing ? (
               <input value={title} onChange={(e) => setTitle(e.target.value)}
-                className="w-full text-xl font-bold bg-transparent border-b-2 border-primary outline-none pb-1" autoFocus/>
+                className="w-full text-lg sm:text-xl font-bold bg-transparent border-b-2 border-primary outline-none pb-1" autoFocus/>
             ) : (
-              <h1 className={cn("text-xl font-bold leading-snug", status === "DONE" && "line-through text-muted-foreground")}>
+              <h1 className={cn("text-lg sm:text-xl font-bold leading-snug", status === "DONE" && "line-through text-muted-foreground")}>
                 {task.title}
               </h1>
             )}
             <p className="text-xs text-muted-foreground mt-1">
-              Created {format(new Date(task.createdAt), "MMM d, yyyy")} · Updated {format(new Date(task.updatedAt), "MMM d, yyyy")}
+              Created {format(new Date(task.createdAt), "MMM d, yyyy")}
             </p>
           </div>
           <div className="flex items-center gap-2 shrink-0">
             {editing ? (
               <>
                 <button onClick={handleSave} disabled={saving}
-                  className="inline-flex items-center gap-1.5 rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50 transition-colors">
-                  <Check className="h-3.5 w-3.5"/>{saving ? "Saving…" : "Save"}
+                  className="inline-flex items-center gap-1 rounded-md bg-primary px-2.5 sm:px-3 py-1.5 text-xs sm:text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50 transition-colors">
+                  <Check className="h-3.5 w-3.5"/><span className="hidden sm:inline">{saving ? "Saving…" : "Save"}</span>
                 </button>
                 <button onClick={handleCancel}
-                  className="inline-flex items-center gap-1.5 rounded-md border px-3 py-1.5 text-sm font-medium hover:bg-muted transition-colors">
-                  <X className="h-3.5 w-3.5"/>Cancel
+                  className="inline-flex items-center gap-1 rounded-md border px-2.5 sm:px-3 py-1.5 text-xs sm:text-sm font-medium hover:bg-muted transition-colors">
+                  <X className="h-3.5 w-3.5"/><span className="hidden sm:inline">Cancel</span>
                 </button>
               </>
             ) : (
               <>
                 <button onClick={() => setEditing(true)}
-                  className="inline-flex items-center gap-1.5 rounded-md border px-3 py-1.5 text-sm font-medium hover:bg-muted transition-colors">
-                  <Pencil className="h-3.5 w-3.5"/>Edit
+                  className="inline-flex items-center gap-1.5 rounded-md border px-2.5 sm:px-3 py-1.5 text-xs sm:text-sm font-medium hover:bg-muted transition-colors">
+                  <Pencil className="h-3.5 w-3.5"/><span className="hidden sm:inline">Edit</span>
                 </button>
                 <button onClick={handleDelete} disabled={deleting}
-                  className="inline-flex items-center gap-1.5 rounded-md border border-destructive/30 bg-destructive/5 px-3 py-1.5 text-sm font-medium text-destructive hover:bg-destructive/10 disabled:opacity-50 transition-colors">
-                  <Trash2 className="h-3.5 w-3.5"/>{deleting ? "Deleting…" : "Delete"}
+                  className="inline-flex items-center gap-1.5 rounded-md border border-destructive/30 bg-destructive/5 px-2.5 sm:px-3 py-1.5 text-xs sm:text-sm font-medium text-destructive hover:bg-destructive/10 disabled:opacity-50 transition-colors">
+                  <Trash2 className="h-3.5 w-3.5"/><span className="hidden sm:inline">{deleting ? "Deleting…" : "Delete"}</span>
                 </button>
               </>
             )}
@@ -122,16 +123,16 @@ export function TaskDetailPanel({ task, users, sprints }: { task: Task; users: U
         </div>
 
         {error && (
-          <div className="mx-6 mt-4 flex items-center gap-2 rounded-md bg-destructive/10 border border-destructive/20 px-3 py-2 text-sm text-destructive">
+          <div className="mx-4 sm:mx-6 mt-4 flex items-center gap-2 rounded-md bg-destructive/10 border border-destructive/20 px-3 py-2 text-sm text-destructive">
             <AlertCircle className="h-4 w-4 shrink-0"/>{error}
           </div>
         )}
 
         {/* Description */}
-        <div className="p-6 border-b">
+        <div className="p-4 sm:p-6 border-b">
           <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">Description</p>
           {editing ? (
-            <textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={5}
+            <textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={4}
               placeholder="Add a description…"
               className="w-full rounded-md border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring resize-none"/>
           ) : (
@@ -141,10 +142,10 @@ export function TaskDetailPanel({ task, users, sprints }: { task: Task; users: U
           )}
         </div>
 
-        {/* Properties grid */}
-        <div className="grid grid-cols-2 gap-px bg-border">
-          {/* Status */}
-          <div className="bg-card p-4">
+        {/* Properties — 1 col mobile, 2 col sm+ */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-border">
+
+          <div className="bg-card p-3 sm:p-4">
             <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2 flex items-center gap-1.5">
               <Layers className="h-3.5 w-3.5"/>Status
             </p>
@@ -159,8 +160,8 @@ export function TaskDetailPanel({ task, users, sprints }: { task: Task; users: U
               </span>
             )}
           </div>
-          {/* Priority */}
-          <div className="bg-card p-4">
+
+          <div className="bg-card p-3 sm:p-4">
             <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2 flex items-center gap-1.5">
               <Flag className="h-3.5 w-3.5"/>Priority
             </p>
@@ -176,8 +177,8 @@ export function TaskDetailPanel({ task, users, sprints }: { task: Task; users: U
               </span>
             )}
           </div>
-          {/* Due date */}
-          <div className="bg-card p-4">
+
+          <div className="bg-card p-3 sm:p-4">
             <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2 flex items-center gap-1.5">
               <Calendar className="h-3.5 w-3.5"/>Due date
             </p>
@@ -188,8 +189,8 @@ export function TaskDetailPanel({ task, users, sprints }: { task: Task; users: U
               <p className="text-sm">{task.dueDate ? format(new Date(task.dueDate), "MMM d, yyyy") : <span className="text-muted-foreground italic">None</span>}</p>
             )}
           </div>
-          {/* Assignee */}
-          <div className="bg-card p-4">
+
+          <div className="bg-card p-3 sm:p-4">
             <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2 flex items-center gap-1.5">
               <User className="h-3.5 w-3.5"/>Assignee
             </p>
@@ -204,15 +205,15 @@ export function TaskDetailPanel({ task, users, sprints }: { task: Task; users: U
                 <div className="h-6 w-6 rounded-full bg-primary/20 flex items-center justify-center text-[10px] font-bold text-primary shrink-0">
                   {task.assignee.name.charAt(0).toUpperCase()}
                 </div>
-                <div>
-                  <p className="text-sm font-medium">{task.assignee.name}</p>
-                  <p className="text-xs text-muted-foreground">{task.assignee.email}</p>
+                <div className="min-w-0">
+                  <p className="text-sm font-medium truncate">{task.assignee.name}</p>
+                  <p className="text-xs text-muted-foreground truncate">{task.assignee.email}</p>
                 </div>
               </div>
             ) : <p className="text-sm text-muted-foreground italic">Unassigned</p>}
           </div>
-          {/* Sprint */}
-          <div className="bg-card p-4">
+
+          <div className="bg-card p-3 sm:p-4">
             <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2 flex items-center gap-1.5">
               <Timer className="h-3.5 w-3.5"/>Sprint
             </p>
@@ -229,8 +230,8 @@ export function TaskDetailPanel({ task, users, sprints }: { task: Task; users: U
               </span>
             ) : <p className="text-sm text-muted-foreground italic">No sprint</p>}
           </div>
-          {/* Milestone */}
-          <div className="bg-card p-4">
+
+          <div className="bg-card p-3 sm:p-4">
             <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2 flex items-center gap-1.5">
               <Flag className="h-3.5 w-3.5"/>Milestone
             </p>
