@@ -64,7 +64,7 @@ export const updateMilestoneSchema = z.object({
 // ─── Task ────────────────────────────────────────────────────
 export const createTaskSchema = z.object({
   title: z.string().min(1, 'Task title is required').max(200),
-  description: z.string().max(1000).optional(),
+  description: z.string().max(1000).optional().nullable(),
   priority: z.enum(['LOW', 'MEDIUM', 'HIGH', 'URGENT']).default('MEDIUM'),
   assigneeId: z.string().uuid().optional(),
   sprintId: z.string().uuid().optional(),
@@ -73,7 +73,7 @@ export const createTaskSchema = z.object({
 
 export const updateTaskSchema = z.object({
   title: z.string().min(1).max(200).optional(),
-  description: z.string().max(1000).optional(),
+  description: z.string().max(1000).optional().nullable(),
   status: z
     .enum(['TODO', 'IN_PROGRESS', 'IN_REVIEW', 'DONE', 'BLOCKED'])
     .optional(),
